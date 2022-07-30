@@ -44,6 +44,7 @@
                       </v-btn>
                     </template>
                   </h3>
+                  
                   <p class="d-flex color-gray mb-0">
                     <v-icon small class="mb-2" color="#a1a1a1">mdi-phone</v-icon
                     ><span class="mx-2">{{
@@ -117,6 +118,10 @@
                         </a>
                       </li>
                     </ul>
+                    <v-row class="mt-3">
+                      <LazyResetPassword />
+                    </v-row>
+                    
                   </v-col>
                 </v-row>
               </v-col>
