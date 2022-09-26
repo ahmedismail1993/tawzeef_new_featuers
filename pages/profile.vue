@@ -14,12 +14,12 @@
                     <div class="profile__wrapper--right__personal-info">
                       <h1 class="profile__wrapper--right__personal-info__title" v-if="profile">
                         {{
-                            profile.personal_information
-                              ? profile.personal_information.first_name
-                              : '' + ' ' + profile.personal_information
-                                ? profile.personal_information &&
-                                profile.personal_information.last_name
-                                : ''
+                        profile.personal_information
+                        ? profile.personal_information.first_name
+                        : '' + ' ' + profile.personal_information
+                        ? profile.personal_information &&
+                        profile.personal_information.last_name
+                        : ''
                         }}
 
                       </h1>
@@ -31,7 +31,7 @@
                       <p class="
                           profile__wrapper--right__personal-info__sub-title
                         ">
-                        {{ profile.personal_information.nationality }}
+                        {{ profile.personal_information.nationality.name.ar }}
                       </p>
 
                     </div>
@@ -51,25 +51,27 @@
                     </v-list>
                     <v-col cols="12">
                       <v-row v-if="profile.cv[0].id == '0'">
-                        <v-dialog v-model="dialog" width="500">
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-btn v-bind="attrs" v-on="on" height="54px" color="#fff" outlined>
+                        
+                        <v-btn  height="54px" color="#fff" outlined  @click="onDialogOpen()">
                               <span class="mx-2">{{
-                                  $t('add_another_cv')
+                              $t('add_another_cv')
                               }}</span>
                             </v-btn>
-                          </template>
-
-                          <v-card>
+                        <v-dialog max-width="700" v-model="dialog">
+                          <v-card max-width="700">
                             <v-container>
                               <v-row>
                                 <v-col cols="12" md="8" class="mx-auto">
+                                  <h2 class="py-3" style="text-align: center">
+                                    {{ $t('another_CV') }}
+                                  </h2>
+
                                   <v-card-text>
-                                    <v-form @submit.prevent="sendcv">
-                                      <LazyFileUpload @fileSelected="onFileSelect" :label="$t('new_CV')" />
-                                      <v-btn type="submit" :disabled="form.new_CV === ''" block class="primary">{{
-                                          $t('send')
-                                      }}</v-btn>
+                                    <v-form @submit.prevent="addCv">
+                                      <LazyFileUpload @fileSelected="onFileSelect" :label="$t('another_CV')"
+                                        v-model="form.another_CV" />
+                                      <v-btn :loading="loadingBtn" type="submit" :disabled="form.message === ''" block
+                                        class="primary">{{ $t('send') }}</v-btn>
                                     </v-form>
                                   </v-card-text>
                                 </v-col>
@@ -77,9 +79,8 @@
                             </v-container>
                           </v-card>
                         </v-dialog>
-                        
                       </v-row>
-                      
+
                       <v-row v-else>
                         <v-col cols="6">
                           <!-- profile.cv && profile.cv[0].file -->
@@ -104,11 +105,11 @@
                           </v-btn>
                         </v-col>
                       </v-row>
-                      
-                    
-                      
-                      
-        
+
+
+
+
+
 
                       <v-row>
                         <template v-for="(social, key) in socials">
@@ -121,10 +122,10 @@
                       </v-row>
                     </v-col>
                     <v-col cols="12">
-                         <v-row class="mt-3">
-                          <LazyResetPassword />
-                     </v-row>
-                      </v-col>
+                      <v-row class="mt-3">
+                        <LazyResetPassword />
+                      </v-row>
+                    </v-col>
                   </v-col>
                 </v-row>
               </div>
@@ -183,18 +184,20 @@ export default {
 
   async fetch({ store, route }) {
     await store.dispatch('profile/setUserProfile', route.query)
+
   },
-  
+
   data() {
     return {
-      
+
       socials: {},
       value: 25,
       dialog: false,
+      loadingBtn: false,
 
       form: {
-        new_CV: [],
-        
+        another_CV: '',
+
       }
     }
   },
@@ -206,11 +209,11 @@ export default {
       return [
         {
           title: `${this.profile.personal_information &&
-              this.profile.personal_information.country
-              ? this.profile.personal_information.country.name[
-              this.$i18n.locale
-              ]
-              : ''
+            this.profile.personal_information.country
+            ? this.profile.personal_information.country.name[
+            this.$i18n.locale
+            ]
+            : ''
             } - ${this.profile.personal_information &&
               this.profile.personal_information.city
               ? this.profile.personal_information.city.name[this.$i18n.locale]
@@ -252,22 +255,36 @@ export default {
         .delete(`/user/delete-cv/${this.profile.cv[0].id}`)
         .then(() => {
           this.$router.push('/profile/info')
+          window.location.reload();
         })
     },
-    sendcv() {
-      this.$axios
-        .post(`/user/upload-cv`, {
-          cv: this.form.new_CV
-        })
-        .then(res => {
-          this.dialog = false
-          console.log(cv)
-          // this.$emit('successfullyAdded', res.data)
-        })
+
+    addCv() {
+      this.loadingBtn = true
+      if (this.$auth.user.type === 'USER') {
+        this.$axios
+          .post(`/user/upload-cv`, {
+            
+            
+            cv: this.form.another_CV,
+
+            
+          })
+          .then(res => {
+            this.dialog = false
+            this.form = {}
+            this.$emit('successfullyApplied', res.data)
+          })
+          .finally(() => (this.loadingBtn = false))
+      }
     },
-    
+    onDialogOpen() {
+      this.dialog = !this.dialog
+      
+      
+    },
     onFileSelect({ file }) {
-      this.form.new_CV = file
+      this.form.another_CV  = file
 
     },
   },

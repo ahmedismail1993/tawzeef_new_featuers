@@ -218,7 +218,7 @@
             </nuxt-link>
           </p>
         </v-col>
-        <v-col cols="12" class="py-5">
+        <!-- <v-col cols="12" class="py-5">
           <p class="text-center">
             {{ $t('register_via') }}
           </p>
@@ -256,7 +256,7 @@
               :src="require('@/assets/images/facebook.svg')"
             />
           </v-btn>
-        </v-col>
+        </v-col> -->
       </v-row>
     </v-form>
   </form-wrapper>
@@ -309,48 +309,48 @@ export default {
     onFileSelect({ file }) {
       this.form.commercial_file = file
     },
-    googleRegister() {
-      this.$auth.loginWith('google').then((res) => {
-        console.log(res)
-      })
-    },
-    facebookRegister() {
-      // this.$auth.loginWith('facebook')
-      this.handleFacebookLogIn()
-    },
-    handleFacebookLogIn() {
-      window.FB.login(
-        (response) => {
-          if (response.authResponse) {
-            window.FB.api('/me?fields=email,name', (res) => {
-              console.log(res, 'facebook')
-              // this.$store.dispatch('user/setSocialUserInfo', {
-              //   ...response,
-              //   socialProviderId: 1,
-              // })
-              // const reqData = {
-              //   user_social_id: Number(response.id),
-              //   provider_users: 1,
-              // }
-              // this.$store
-              //   .dispatch('user/socialLogin', reqData)
-              //   .then((data) => {
-              //     if (data.access_token) {
-              //       this.loginStatus = 'SUCCESS'
-              //     }
-              //   })
-              //   .then(() => window.location.reload())
-              //   .catch(() => {
-              //     this.$router.push('/signup')
-              //   })
-            })
-          } else {
-            console.log('User cancelled login or did not fully authorize.')
-          }
-        },
-        { scope: 'email' }
-      )
-    },
+    // googleRegister() {
+    //   this.$auth.loginWith('google').then((res) => {
+    //     console.log(res)
+    //   })
+    // },
+    // facebookRegister() {
+    //   // this.$auth.loginWith('facebook')
+    //   this.handleFacebookLogIn()
+    // },
+    // handleFacebookLogIn() {
+    //   window.FB.login(
+    //     (response) => {
+    //       if (response.authResponse) {
+    //         window.FB.api('/me?fields=email,name', (res) => {
+    //           console.log(res, 'facebook')
+    //           // this.$store.dispatch('user/setSocialUserInfo', {
+    //           //   ...response,
+    //           //   socialProviderId: 1,
+    //           // })
+    //           // const reqData = {
+    //           //   user_social_id: Number(response.id),
+    //           //   provider_users: 1,
+    //           // }
+    //           // this.$store
+    //           //   .dispatch('user/socialLogin', reqData)
+    //           //   .then((data) => {
+    //           //     if (data.access_token) {
+    //           //       this.loginStatus = 'SUCCESS'
+    //           //     }
+    //           //   })
+    //           //   .then(() => window.location.reload())
+    //           //   .catch(() => {
+    //           //     this.$router.push('/signup')
+    //           //   })
+    //         })
+    //       } else {
+    //         console.log('User cancelled login or did not fully authorize.')
+    //       }
+    //     },
+    //     { scope: 'email' }
+    //   )
+    // },
     async handleSubmit() {
       try {
         this.loadingBtn = true

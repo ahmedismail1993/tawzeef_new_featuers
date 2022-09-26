@@ -34,6 +34,17 @@
             <v-col sm="12" v-for="(item, i) in jobs" :key="i">
               <LazyCardsJob :job="item" />
             </v-col>
+            <v-col cols="12">
+              <div class="text-xs-center mt-5 mb-5">
+        <v-pagination
+          v-if="jobs.length > 0 && pagination.last_page > 1"
+          v-model="pagination.current_page"
+          :length="pagination.last_page"
+          :total-visible="10"
+          @input="handlePagination"
+        ></v-pagination>
+      </div>
+            </v-col>
           </v-row>
           <!-- {{ jobs }} -->
         </v-col>
@@ -75,14 +86,17 @@ export default {
       const res = await $axios.get('/employer/find-job', {
         params: { ...query },
       })
-      const { data } = res.data
+      const { data,meta } = res.data
+      
       return {
         jobs: data,
+        pagination: meta,
       }
     } catch (error) {
       console.log(error)
     }
   },
+
 
   data() {
     return {
@@ -91,6 +105,8 @@ export default {
       message: '',
       employee_id: '',
       loadingBtn: false,
+      
+      
     }
   },
   methods: {
@@ -109,6 +125,9 @@ export default {
     onDialogOpen(id) {
       this.dialog = !this.dialog
       this.employee_id = id
+    },
+    handlePagination(page) {
+      this.$router.push({ query: { ...this.$route.query, page } })
     },
   },
   computed: {
@@ -129,6 +148,7 @@ export default {
       },
       immediate: true,
     },
+    
   },
 }
 </script>

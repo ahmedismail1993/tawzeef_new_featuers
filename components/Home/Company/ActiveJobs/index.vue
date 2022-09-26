@@ -61,6 +61,7 @@ export default {
         .get(`/${this.request_type}/active-job?page=${padeNo}`)
         .then((res) => {
           const { data, meta } = res.data
+          console.log(res.data)
           this.active_jobs = data
           this.pagination = meta
           this.loading = false

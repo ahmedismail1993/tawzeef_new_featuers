@@ -9,7 +9,7 @@
             <div class="row">
                 <div 
             v-for="(company,i) in companies"
-            class="col-md-3 "
+            class="col-md-3 npm run dev"
             >
             <div v-if="company.avatar" :key="i" class="">
             <img :src="company.avatar || ''" alt="photo" style="width: 100%; height: 100%;">
