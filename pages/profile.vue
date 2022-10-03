@@ -258,18 +258,18 @@ export default {
           window.location.reload();
         })
     },
-
+ 
     addCv() {
       this.loadingBtn = true
       if (this.$auth.user.type === 'USER') {
         this.$axios
-          .post(`/user/upload-cv`, {
+          .post(`/user/upload-cv`, 
             
             
-            cv: this.form.another_CV,
+            this.form.another_CV
 
             
-          })
+          )
           .then(res => {
             this.dialog = false
             this.form = {}

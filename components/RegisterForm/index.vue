@@ -44,6 +44,20 @@
           </form-group>
         </v-col>
         <v-col cols="12" md="6" class="py-0 my-0">
+          <form-group name="confirm_email" attribute="email">
+            <template >
+              <v-text-field
+               
+                filled
+                v-model="form.confirmEmail"
+                type="email"
+                :append-icon="'mdi-email'"
+                :rules="confirmEmailRules"
+              ></v-text-field>
+            </template>
+          </form-group>
+        </v-col>
+        <v-col cols="12" md="6" class="py-0 my-0">
           <form-group name="password" attribute="password">
             <template slot-scope="{ attrs, listeners }">
               <v-text-field
@@ -253,7 +267,9 @@ export default {
         major_id: '',
         // cv: '',
         hear_by_id: '',
+        confirmEmail:'',
       },
+      
       majors: [],
       countires: [],
       nationalities:[],
@@ -265,6 +281,10 @@ export default {
       loadingCities: false,
       disabledCity: true,
       loadingBtn: false,
+      confirmEmailRules:[
+      (v) =>
+      v === this.form.email || 'Email must match',
+      ]
     }
   },
   methods: {
@@ -423,6 +443,11 @@ export default {
       email: {
         required,
         email,
+      },
+      confirmEmail:{
+        required,
+        email,
+        
       },
       password: {
         required,

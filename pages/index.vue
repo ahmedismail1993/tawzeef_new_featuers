@@ -9,6 +9,7 @@
       <LazyHomeEmploymentRole :role="role" />
       <LazyHomeAgents />
       <LazyHomeCompanies />
+      <LazyQueries />
     </template>
     <template v-if="$auth.loggedIn">
       <LazyHomeCompany />
@@ -25,6 +26,7 @@ export default {
     return {
       loadingData: false,
       role: null,
+      visible: true
     }
   },
   mounted() {
