@@ -28,11 +28,11 @@
                         ">
                         {{ profile ? profile.job_title : '' }}
                       </p>
-                      <p class="
+                      <!-- <p class="
                           profile__wrapper--right__personal-info__sub-title
                         ">
                         {{ profile.personal_information.nationality.name.ar }}
-                      </p>
+                      </p> -->
 
                     </div>
                     <v-list flat color="transparent">
@@ -121,11 +121,7 @@
                         </template>
                       </v-row>
                     </v-col>
-                    <v-col cols="12">
-                      <v-row class="mt-3">
-                        <LazyResetPassword />
-                      </v-row>
-                    </v-col>
+                    
                   </v-col>
                 </v-row>
               </div>
