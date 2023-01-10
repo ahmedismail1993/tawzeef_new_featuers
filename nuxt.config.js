@@ -14,8 +14,7 @@ export default {
     script: [
       {
         hid: 'apple',
-        src:
-          'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js',
+        src: 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js',
         defer: true,
       },
     ],
@@ -126,7 +125,7 @@ export default {
     // },
   },
   axios: {
-    baseURL: 'https://admin.bebaan.net/api/v1',
+    baseURL: 'https://admin.bebaan.net/public/api/v1',
   },
   auth: {
     strategies: {
@@ -211,5 +210,5 @@ export default {
   },
   server: {
     port: 3060,
-  }
+  },
 }

@@ -102,6 +102,7 @@
       :clipped-left="clipped"
       fixed
       app
+      ref="app_header"
     >
       <v-app-bar-nav-icon
         color="primary"
@@ -113,6 +114,7 @@
 
       <div class="d-flex align-center py-8 menu-adjust">
         <v-btn
+          small
           class="primary text-capitalize"
           v-if="!$auth.loggedIn"
           :to="localePath('/login?type=COMPANY')"
@@ -182,9 +184,9 @@
                   v-for="(notification, i) in notifications"
                   :key="i"
                   :to="
-                    notification.model == 'JobSubscribe' || notification.model=='Job'
+                    notification.model == 'JobSubscribe' ||
+                    notification.model == 'Job'
                       ? `/jobs/${notification.model_id}`
-
                       : '/messages'
                   "
                   class="mx-0 px-5"
@@ -259,6 +261,7 @@
         </v-menu>
 
         <v-btn
+          small
           class="primary text-capitalize"
           v-if="!$auth.loggedIn"
           :to="localePath('/login')"
@@ -326,7 +329,7 @@
           </v-list>
         </v-menu>
 
-        <v-btn class="mx-2" icon :to="switchLocalePath(locale.code)">
+        <v-btn small class="mx-2" icon :to="switchLocalePath(locale.code)">
           <img
             v-if="locale.code === 'ar'"
             width="28px"
@@ -350,7 +353,7 @@ export default {
   name: 'Header',
   directives: {
     onScroll: {
-      update(el, bind) {
+      inserted(el, bind) {
         document.addEventListener('scroll', (e) => {
           // if (!bind.value) {
           //   el.classList.remove('active-header')
@@ -476,7 +479,10 @@ export default {
   watch: {
     $route: {
       handler() {
-        if (this.$route.path === '/search-on-employee'||this.$route.path ==='/salary-reports') {
+        if (
+          this.$route.path === '/search-on-employee' ||
+          this.$route.path === '/salary-reports'
+        ) {
           this.iconColor = 'gray'
           this.isHome = false
         } else {

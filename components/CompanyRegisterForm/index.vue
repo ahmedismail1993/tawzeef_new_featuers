@@ -42,15 +42,16 @@
           </form-group>
         </v-col>
         <v-col cols="12" md="6" class="py-0 my-0">
-          <form-group name="confirm_email" attribute="email">
-            <template >
+          <form-group name="confirm_email" attribute="confirm_email">
+            <template slot-scope="{ attrs, listeners }">
               <v-text-field
-               
+                v-on="listeners"
+                v-bind="attrs"
                 filled
-                v-model="form.confirmEmail"
+                :label="$t('labels.confirm_email')"
+                v-model="form.confirm_email"
                 type="email"
                 :append-icon="'mdi-email'"
-                :rules="confirmEmailRules"
               ></v-text-field>
             </template>
           </form-group>
@@ -68,6 +69,23 @@
                 :append-icon="passwordIcon"
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
+            </template>
+          </form-group>
+        </v-col>
+        <v-col cols="12" md="6" class="py-0 my-0">
+          <form-group name="nationality_id" attribute="nationality_id">
+            <template slot-scope="{ attrs, listeners }">
+              <v-autocomplete
+                :loading="loadingNationalities"
+                :items="nationalities"
+                item-text="name"
+                item-value="id"
+                v-bind="attrs"
+                v-on="listeners"
+                filled
+                v-model="form.nationality_id"
+                @change="getNationalities"
+              ></v-autocomplete>
             </template>
           </form-group>
         </v-col>
@@ -277,7 +295,7 @@
 </template>
 
 <script>
-import { required, email } from 'vuelidate/lib/validators'
+import { required, email, sameAs } from 'vuelidate/lib/validators'
 export default {
   name: 'CompanyRegisterForm',
   data() {
@@ -296,27 +314,39 @@ export default {
         working_type: '',
         address: '',
         description: '',
+        nationality_id: '',
         members_count: '',
-        confirmEmail:'',
+        confirm_email: '',
       },
       sectors: [],
       hearByItems: [],
       countires: [],
+      nationalities: [],
       cities: [],
       loadingMajors: true,
-      loadingSectors:true,
+      loadingSectors: true,
       loadingCountries: true,
+      loadingNationalities: true,
       loadingCities: false,
       disabledCity: true,
       loadingBtn: false,
       type: 'COMPANY',
-      confirmEmailRules:[
-      (v) =>
-      v === this.form.email || 'Email must match',
-      ]
+      confirm_emailRules: [
+        (v) => v === this.form.email || 'يرجي تأكيد البريد اﻷلكتروني',
+      ],
     }
   },
   methods: {
+    getNationalities() {
+      this.$axios.get('/general/nationalities').then((res) => {
+        const { data } = res.data
+        this.loadingNationalities = false
+        this.nationalities = data.map((el) => ({
+          id: el.id,
+          name: el.name[this.$i18n.locale],
+        }))
+      })
+    },
     async getHearingBy() {
       const res = await this.$axios.get('general/hear_by')
       const { data } = res.data
@@ -450,6 +480,7 @@ export default {
         this.getSectors()
         this.getCountires()
         this.getHearingBy()
+        this.getNationalities()
       },
       immediate: true,
     },
@@ -460,15 +491,18 @@ export default {
         required,
         email,
       },
-      confirmEmail:{
+      confirm_email: {
         required,
         email,
-        
+        same_email: sameAs('email_main_domain'),
       },
       password: {
         required,
       },
       country_id: {
+        required,
+      },
+      nationality_id: {
         required,
       },
       city_id: {

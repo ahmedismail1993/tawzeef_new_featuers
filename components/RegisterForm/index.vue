@@ -45,9 +45,9 @@
         </v-col>
         <v-col cols="12" md="6" class="py-0 my-0">
           <form-group name="confirm_email" attribute="email">
-            <template >
+            <template>
               <v-text-field
-               
+                label="تأكيد البريد اﻷلكتروني"
                 filled
                 v-model="form.confirmEmail"
                 type="email"
@@ -102,7 +102,7 @@
                 v-on="listeners"
                 filled
                 v-model="form.nationality_id"
-                @change="getnationalities"
+                @change="getNationalities"
               ></v-autocomplete>
             </template>
           </form-group>
@@ -261,30 +261,29 @@ export default {
         email: '',
         password: '',
         country_id: '',
-        nationality_id:'',
+        nationality_id: '',
         city_id: '',
         // job_title: '',
         major_id: '',
         // cv: '',
         hear_by_id: '',
-        confirmEmail:'',
+        confirmEmail: '',
       },
-      
+
       majors: [],
       countires: [],
-      nationalities:[],
+      nationalities: [],
       hearByItems: [],
       cities: [],
       loadingMajors: true,
       loadingCountries: true,
-      loadingnationalities:true,
+      loadingnationalities: true,
       loadingCities: false,
       disabledCity: true,
       loadingBtn: false,
-      confirmEmailRules:[
-      (v) =>
-      v === this.form.email || 'Email must match',
-      ]
+      confirmEmailRules: [
+        (v) => v === this.form.email || 'يرجي تأكيد البريد الالكتروني',
+      ],
     }
   },
   methods: {
@@ -376,7 +375,7 @@ export default {
         })
       })
     },
-    getCountires() {
+    getCountries() {
       this.$axios.get('/general/countries').then((res) => {
         const { data } = res.data
         this.loadingCountries = false
@@ -386,7 +385,7 @@ export default {
         }))
       })
     },
-    getnationalities() {
+    getNationalities() {
       this.$axios.get('/general/nationalities').then((res) => {
         const { data } = res.data
         this.loadingnationalities = false
@@ -424,9 +423,9 @@ export default {
     $route: {
       handler() {
         this.getMajors()
-        this.getCountires()
+        this.getCountries()
         this.getHearingBy()
-        this.getnationalities()
+        this.getNationalities()
       },
       immediate: true,
     },
@@ -444,10 +443,9 @@ export default {
         required,
         email,
       },
-      confirmEmail:{
+      confirmEmail: {
         required,
         email,
-        
       },
       password: {
         required,
@@ -455,7 +453,7 @@ export default {
       country_id: {
         required,
       },
-      nationality_id:{
+      nationality_id: {
         required,
       },
       city_id: {
@@ -473,4 +471,3 @@ export default {
   },
 }
 </script>
-

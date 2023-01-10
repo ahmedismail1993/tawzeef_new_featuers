@@ -9,11 +9,11 @@
                 <v-card flat color="transparent">
                   <div class="login__header">
                     <h1 class="text-center login__title py-5">
-                      {{ $t('reset_password') }}
+                      {{ $t('confirm_code') }}
                     </h1>
-                    <p class="login__sub-title">
+                    <!-- <p class="login__sub-title">
                       {{ $t('forget_password_text') }}
-                    </p>
+                    </p> -->
                   </div>
                   <form-wrapper :validator="$v.form">
                     <v-form @submit.prevent="handleSubmit">
@@ -32,11 +32,28 @@
                             </template>
                           </form-group>
                         </v-col>
+                        <v-col cols="12" class="my-0 py-0">
+                          <form-group name="token" attribute="code_token">
+                            <template slot-scope="{ attrs, listeners }">
+                              <v-otp-input
+                                style="direction: ltr"
+                                v-model="form.token"
+                                v-bind="attrs"
+                                v-on="listeners"
+                                length="4"
+                                plain
+                                type="number"
+                              ></v-otp-input>
+                            </template>
+                          </form-group>
+                        </v-col>
 
                         <v-col cols="12" class="my-0 py-0">
                           <v-btn
                             :loading="loadingBtn"
-                            :disabled="$v.form.$invalid"
+                            :disabled="
+                              $v.form.$invalid || form.token.length !== 4
+                            "
                             height="56px"
                             type="submit"
                             block
@@ -61,7 +78,7 @@
 <script>
 import { required, email } from 'vuelidate/lib/validators'
 export default {
-  name: 'ForgetPassword',
+  name: 'OtpCode',
   layout: 'auth',
   middleware: ['isAuth'],
 
@@ -70,20 +87,27 @@ export default {
       loadingBtn: false,
       form: {
         email: '',
+        token: '',
       },
     }
   },
   methods: {
-    handleSubmit() {
-      this.loadingBtn = true
-      this.$axios
-        .post('/auth/forget-password', this.form)
-        .then(() => {
-          this.$router.push(this.localePath('/otp-code'))
-        })
-        .finally(() => {
-          this.loadingBtn = false
-        })
+    async handleSubmit() {
+      try {
+        this.loadingBtn = true
+        const res = await this.$axios.post(
+          '/auth/reset-password/validate-token',
+          this.form
+        )
+        if (res.status) {
+          this.$router.push(
+            this.localePath(`/reset-password?token=${this.form.token}`)
+          )
+        }
+        this.loadingBtn = false
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 
@@ -92,6 +116,9 @@ export default {
       email: {
         required,
         email,
+      },
+      token: {
+        required,
       },
     },
   },

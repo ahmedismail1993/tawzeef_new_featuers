@@ -115,7 +115,6 @@
     
   </div> -->
   </main>
-  
 </template>
 
 <script>
@@ -128,7 +127,7 @@ export default {
     return {
       showPassword: false,
       // showModal:false,
-      verfiy:'',
+      verfiy: '',
       form: {
         email: '',
         password: '',
@@ -138,19 +137,21 @@ export default {
   },
   methods: {
     handleLogin() {
-      this.$auth
-        .loginWith('local', { data: this.form })
-        .then((response) => {
-          // this.showModal=true
-          this.$router.push(this.localePath('/'))
-          
-          // console.log(response)
-        })
-        .catch((err) => {
-          console.log(err)
-          
-        })
-        
+      this.$axios.post('auth/login', this.form).then((res) => {
+        const {
+          data: { user, access_token },
+        } = res.data
+        if (!user.email_verified) {
+          this.$router.push(this.localePath('/verify-email'))
+        } else {
+          if (access_token) {
+            this.$auth.setUserToken(access_token.token).then(() => {
+              this.$auth.setUser(user)
+              this.$router.push(this.localePath('/'))
+            })
+          }
+        }
+      })
     },
     googleLogin() {
       this.$auth.loginWith('google')
@@ -211,12 +212,12 @@ export default {
   justify-content: center;
   background-color: #000000da;
 }
-.verfiy_input{
-    width: 80%;
-    height: 50px;
-    border: 2px solid #000;
-    border-radius: 10px;
-    margin: 20px 0 0 0 ;
+.verfiy_input {
+  width: 80%;
+  height: 50px;
+  border: 2px solid #000;
+  border-radius: 10px;
+  margin: 20px 0 0 0;
 }
 .modal {
   text-align: center;
