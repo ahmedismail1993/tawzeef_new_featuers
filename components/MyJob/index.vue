@@ -125,7 +125,6 @@ export default {
         .finally(() => (this.loadingBtn = false))
     },
     onDialogOpen(employee) {
-      console.log(this.$route.name)
       this.dialog = !this.dialog
       if (
         this.$route.name == 'jobs-id___ar___default' ||

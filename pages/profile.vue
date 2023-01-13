@@ -56,7 +56,7 @@
                       </template>
                     </v-list>
                     <v-col cols="12">
-                      <!-- <v-row v-if="profile.cv[0].id == '0'">
+                      <!-- <v-row v-if="profile.cv.id == '0'">
                         <v-btn
                           height="54px"
                           color="#fff"
@@ -115,7 +115,7 @@
                               alt="photo"
                             />
                             <span class="mx-2">{{
-                              profile.cv && profile.cv[0].file
+                              profile.cv && profile.cv.file
                                 ? $t('update_cv')
                                 : $t('cv')
                             }}</span>
@@ -124,7 +124,7 @@
                         <v-col cols="4" class="mx-auto">
                           <v-btn
                             target="_blank"
-                            :href="profile.cv && profile.cv[0].file"
+                            :href="profile.cv && profile.cv.file"
                             width="61px"
                             height="54px"
                             color="#fff"
@@ -228,6 +228,7 @@
               <v-card-text>
                 <v-form @submit.prevent="updateCv">
                   <LazyFileUpload
+                    v-if="dialog"
                     @fileSelected="onFileSelect"
                     :label="$t('another_CV')"
                     v-model="form.another_CV"
@@ -325,12 +326,10 @@ export default {
   },
   methods: {
     delete_cv() {
-      this.$axios
-        .delete(`/user/delete-cv/${this.profile.cv[0].id}`)
-        .then(() => {
-          this.$router.push('/profile/info')
-          window.location.reload()
-        })
+      this.$axios.delete(`/user/delete-cv/${this.profile.cv.id}`).then(() => {
+        this.$router.push('/profile/info')
+        window.location.reload()
+      })
     },
     updateCv() {
       this.loadingBtn = true
@@ -343,6 +342,7 @@ export default {
             this.dialog = false
             this.form = {}
             this.$emit('successfullyApplied', res.data)
+            this.$store.dispatch('profile/setUserProfile')
           })
           .finally(() => (this.loadingBtn = false))
       }

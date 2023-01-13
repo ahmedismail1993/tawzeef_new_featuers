@@ -192,8 +192,6 @@
                   class="mx-0 px-5"
                 >
                   <article>
-                    <!-- {{ notification }} -->
-                    <!-- <h4>{{ notification.model || '' }}</h4> -->
                     <p class="mb-0">
                       <v-icon color="primary" small v-if="!notification.read"
                         >mdi-checkbox-blank-circle</v-icon
@@ -353,13 +351,14 @@ export default {
   name: 'Header',
   directives: {
     onScroll: {
-      inserted(el, bind) {
-        document.addEventListener('scroll', (e) => {
+      bind(el, bind) {
+        window.addEventListener('scroll', (e) => {
           // if (!bind.value) {
           //   el.classList.remove('active-header')
           //   return
           // }
-          if (e.path[1].scrollY > 100) {
+
+          if (window.scrollY > 100) {
             el.classList.add('active-header')
           } else {
             el.classList.remove('active-header')

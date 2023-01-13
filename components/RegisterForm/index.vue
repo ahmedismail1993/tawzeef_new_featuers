@@ -304,7 +304,6 @@ export default {
     async appleRegister() {
       try {
         const data = await AppleID.auth.signIn()
-        console.log(data)
       } catch (error) {
         //handle error.
       }
@@ -320,8 +319,6 @@ export default {
             window.FB.api('/me?fields=email,name', () => {
               this.getFaceBookAccessToken()
             })
-          } else {
-            console.log('User cancelled login or did not fully authorize.')
           }
         },
         { scope: 'email' }
@@ -331,7 +328,6 @@ export default {
       window.FB.getLoginStatus((response) => {
         if (response.status === 'connected') {
           var accessToken = response.authResponse.accessToken
-          console.log(accessToken)
         }
       })
     },
