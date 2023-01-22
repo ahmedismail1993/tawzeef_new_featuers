@@ -87,7 +87,7 @@
                   <form-group name="nationality_id" attribute="nationality_id">
                     <template slot-scope="{ attrs, listeners }">
                       <v-select
-                        :items="countries"
+                        :items="nationalities"
                         item-text="name"
                         item-value="id"
                         dense
@@ -212,9 +212,11 @@ export default {
     return {
       menu: false,
       disabledCity: true,
+      loadingNationalities: true,
       loadingCity: false,
       loadingBtn: false,
       cities: [],
+      nationalities: [],
       form: {
         first_name: '',
         last_name: '',
@@ -224,11 +226,23 @@ export default {
         country_id: '',
         city_id: '',
         social_status: '',
-        
       },
     }
   },
+  created() {
+    this.getNationalities()
+  },
   methods: {
+    getNationalities() {
+      this.$axios.get('/general/nationalities').then((res) => {
+        const { data } = res.data
+        this.loadingNationalities = false
+        this.nationalities = data.map((el) => ({
+          id: el.id,
+          name: el.name[this.$i18n.locale],
+        }))
+      })
+    },
     allowedDates(dates) {
       const allDates = new Date(dates)
       const currentDate = Date.now()
